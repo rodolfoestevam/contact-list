@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact List</title>
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+<body>
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo"><i class="material-icons"></i>Contact List</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="insert-contact.html">New</a></li>
+            <li><a href="index.html">List</a></li>
+        </ul>
+    </div>
+</nav>
+<div>
+    <form>
+        <div class="input-field">
+            <input id="search" type="search" required>
+            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+            <i class="material-icons">close</i>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    <table class="highlight">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Role</th>
+            <th>State</th>
+            <th>City</th>
+            <th>Phone</th>
+            <th>Skype</th>
+            <th>Observation</th>
+        </tr>
+        </thead>
+
+        <tbody id="contactTable">
+        </tbody>
+    </table>
+</div>
+
+<!-- JQuery -->
+<script src="jquery.min.js"></script>
+
+<!-- Materialize CSS-->
+<script type="text/javascript" src="js/materialize.min.js"></script>
+
+<script>
+    const tBody = $('#contactTable')
+
+    $('#search').keydown(function () {
+        const word = $('#search').val()
+
+        // Search for contacts that contains the received string.
+        if (word.length > 0) {
+            // Clean table.
+            $('#contactTable').find('tr').remove()
+
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: 'api/contact.php?word=' + word,
+                    success: function (response) {
+                        console.log('success!')
+                        populateTable(JSON.parse(response))
+
+                    },
+                    error: function (error) {
+                        console.log('failed: ' + JSON.stringify(error))
+                    }
+                }
+            )
+        } else {
+            requestAll()
+        }
+    })
+
+    function requestAll() {
+        $.ajax(
+            {
+                type: 'GET',
+                url: 'api/contact.php?all',
+                success: function (response) {
+                    console.log('success!')
+                    populateTable(JSON.parse(response))
+                },
+                error: function (error) {
+                    console.log('failed: ' + JSON.stringify(error))
+                }
+            }
+        )
+    }
+
+    /**
+     * Populates table with values.
+     *
+     * @param contactJSON Array of Contact objects.
+     */
+    function populateTable(contactJSON) {
+        for (let i = 0; i < contactJSON.length; i++) {
+            tBody.append(
+                `<tr>
+                    <td>${contactJSON[i].name}</td>
+                    <td>${contactJSON[i].company}</td>
+                    <td>${contactJSON[i].role}</td>
+                    <td>${contactJSON[i].state}</td>
+                    <td>${contactJSON[i].city}</td>
+                    <td>${contactJSON[i].phone}</td>
+                    <td>${contactJSON[i].skype}</td>
+                    <td>${contactJSON[i].observation}</td>
+                </tr>`
+            )
+        }
+    }
+    requestAll()
+</script>
+</body>
+</html>

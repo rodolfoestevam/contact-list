@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Contact</title>
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Contact List</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="insert-contact.html">New</a></li>
+            <li><a href="index.html">List</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <form id="contactForm">
+        <div class="row">
+            <div class="col s4"><label for="name">Name </label><input name="name" type="text" id="name"></div>
+            <div class="col s4"><label for="company">Company </label><input name="company" type="text" id="company">
+            </div>
+            <div class="col s4"><label for="role">Role </label><input name="role" type="text" id="role"></div>
+        </div>
+        <div class="row">
+            <div class="col s6"><label for="state">State </label><input name="state" type="text" id="state"></div>
+            <div class="col s6"><label for="city">City </label><input name="city" type="text" id="city"></div>
+        </div>
+        <div class="row">
+            <div class="col s6"><label for="phone">Phone </label><input name="phone" type="text" id="phone"></div>
+            <div class="col s6"><label for="skype">Skype </label><input type="text" name="skype" id="skype"></div>
+        </div>
+        <div class="row">
+            <div class="col s12"><label for="observation">Observation </label><textarea class="materialize-textarea"
+                                                                                        name="observation"
+                                                                                        id="observation"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <button class="btn waves-effect waves-light" id="submit" type="button">Save</button>
+
+        </div>
+    </form>
+</div>
+<!-- JQuery -->
+<script src="jquery.min.js"></script>
+<!-- Materialize CSS-->
+<script type="text/javascript" src="js/materialize.min.js"></script>
+<script>
+    $('#submit').on('click', function () {
+        const serializedForm = $('#contactForm').serialize();
+
+        $.ajax(
+            {
+                type: 'POST',
+                url: 'api/contact.php',
+                data: serializedForm,
+                success: function (response) {
+                    console.log('success: ' + JSON.stringify(response))
+                },
+                error: function (error) {
+                    console.log('failed: ' + JSON.stringify(error))
+                }
+            }
+        );
+    });
+</script>
+</body>
+</html>
